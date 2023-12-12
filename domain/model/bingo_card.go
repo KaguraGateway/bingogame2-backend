@@ -15,11 +15,21 @@ type BingoCard struct {
 	card      [5][5]BingoRow
 }
 
-func RebuildBingoCard(bingoSeed int64) *BingoCard {
+func NewBingoCard(bingoSeed int64) *BingoCard {
 	return &BingoCard{
 		bingoSeed: bingoSeed,
 		card:      GenerateCard(bingoSeed),
 	}
+}
+
+func RebuildBingoCard(bingoSeed int64, bingoNumbers []uint) *BingoCard {
+	bc := &BingoCard{
+		bingoSeed: bingoSeed,
+		card:      GenerateCard(bingoSeed),
+	}
+	bc.UpdateBingoCard(bingoNumbers)
+
+	return bc
 }
 
 func GenerateCard(bingoSeed int64) [5][5]BingoRow {
