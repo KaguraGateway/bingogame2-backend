@@ -11,6 +11,7 @@ import (
 	socketio "github.com/googollee/go-socket.io"
 	"github.com/joho/godotenv"
 	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v4/middleware"
 	"github.com/samber/do"
 	"github.com/uptrace/bun"
 	"github.com/uptrace/bun/dialect/pgdialect"
@@ -59,6 +60,10 @@ func main() {
 	// HTTP Server
 	httpServer := echo.New()
 	httpServer.HideBanner = true
+	httpServer.Use(middleware.CORSWithConfig(middleware.CORSConfig{
+		AllowOrigins: []string{"*"},
+		AllowHeaders: []string{echo.HeaderOrigin, echo.HeaderContentType, echo.HeaderAccept},
+	}))
 	http_server.RegisterRoutes(httpServer, socketIoServer, i)
 
 	port, err := strconv.Atoi(os.Getenv("PORT"))

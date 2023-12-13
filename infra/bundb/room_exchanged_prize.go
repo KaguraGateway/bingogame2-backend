@@ -6,6 +6,7 @@ import (
 	"github.com/KaguraGateway/bingogame2-backend/domain/repository"
 	"github.com/KaguraGateway/bingogame2-backend/infra/bundb/dao"
 	"github.com/samber/do"
+	"github.com/samber/lo"
 	"github.com/uptrace/bun"
 )
 
@@ -20,11 +21,13 @@ func NewRoomExchangedPrizeRepository(i *do.Injector) (repository.RoomExchangedPr
 }
 
 func (r roomExchangedPrizeRepositoryDb) FindByRoomID(ctx context.Context, roomID string) ([]*model.RoomExchangedPrize, error) {
-	roomExchangedPrizes := make([]*model.RoomExchangedPrize, 0)
+	roomExchangedPrizes := make([]*dao.RoomExchangedPrize, 0)
 	if err := r.db.NewSelect().Model(&roomExchangedPrizes).Where("room_id = ?", roomID).Scan(ctx); err != nil {
 		return nil, err
 	}
-	return roomExchangedPrizes, nil
+	return lo.Map(roomExchangedPrizes, func(item *dao.RoomExchangedPrize, index int) *model.RoomExchangedPrize {
+		return model.RebuildRoomExchangedPrize(item.ID, roomID)
+	}), nil
 }
 
 func (r roomExchangedPrizeRepositoryDb) Save(ctx context.Context, roomExchangedPrize *model.RoomExchangedPrize) error {

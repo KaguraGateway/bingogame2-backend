@@ -20,11 +20,11 @@ func NewRoomRepository(i *do.Injector) (repository.RoomRepository, error) {
 }
 
 func (r roomRepositoryDb) FindByID(ctx context.Context, id string) (*model.Room, error) {
-	room := new(model.Room)
-	if err := r.db.NewSelect().Model(&room).Where("id = ?", id).Scan(ctx); err != nil {
+	room := new(dao.Room)
+	if err := r.db.NewSelect().Model(room).Where("id = ?", id).Scan(ctx); err != nil {
 		return nil, err
 	}
-	return room, nil
+	return model.RebuildRoom(room.ID, room.PrizeNum), nil
 }
 
 func (r roomRepositoryDb) Save(ctx context.Context, room *model.Room) error {

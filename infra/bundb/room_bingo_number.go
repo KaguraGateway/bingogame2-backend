@@ -6,6 +6,7 @@ import (
 	"github.com/KaguraGateway/bingogame2-backend/domain/repository"
 	"github.com/KaguraGateway/bingogame2-backend/infra/bundb/dao"
 	"github.com/samber/do"
+	"github.com/samber/lo"
 	"github.com/uptrace/bun"
 )
 
@@ -20,11 +21,13 @@ func NewRoomBingoNumberRepository(i *do.Injector) (repository.RoomBingoNumberRep
 }
 
 func (r roomBingoNumberRepositoryDb) FindByRoomID(ctx context.Context, roomID string) ([]*model.RoomBingoNumber, error) {
-	roomBingoNumbers := make([]*model.RoomBingoNumber, 0)
+	roomBingoNumbers := make([]*dao.RoomBingoNumber, 0)
 	if err := r.db.NewSelect().Model(&roomBingoNumbers).Where("room_id = ?", roomID).Scan(ctx); err != nil {
 		return nil, err
 	}
-	return roomBingoNumbers, nil
+	return lo.Map(roomBingoNumbers, func(item *dao.RoomBingoNumber, index int) *model.RoomBingoNumber {
+		return model.RebuildRoomBingoNumber(item.ID, roomID)
+	}), nil
 }
 
 func (r roomBingoNumberRepositoryDb) Save(ctx context.Context, roomBingoNumber *model.RoomBingoNumber) error {

@@ -20,9 +20,12 @@ func RegisterRoutes(socketIoServer *socketio.Server, i *do.Injector) {
 
 		return nil
 	})
+	socketIoServer.OnError("/", func(conn socketio.Conn, err error) {
+		fmt.Printf("%v\n", err)
+	})
 	// User
 	socketIoServer.OnEvent("/", "UserAuth", NewRoomUserAuth(i).OnEvent)
-	socketIoServer.OnEvent("/", "UserRegister", NewRoomUserAuth(i).OnEvent)
+	socketIoServer.OnEvent("/", "UserRegister", NewRoomUserRegister(i).OnEvent)
 	socketIoServer.OnEvent("/", "RequestPrizeSpin", NewRequestPrizeSpin(i).OnEvent)
 	// Admin
 	socketIoServer.OnEvent("/", "RequestAdminInit", NewRequestAdminInit(i).OnEvent)

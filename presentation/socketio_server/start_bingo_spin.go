@@ -2,6 +2,7 @@ package socketio_server
 
 import (
 	"context"
+	"fmt"
 	"github.com/KaguraGateway/bingogame2-backend/application"
 	"github.com/KaguraGateway/bingogame2-backend/domain/model"
 	socketio "github.com/googollee/go-socket.io"
@@ -28,6 +29,7 @@ func (c StartBingoSpin) OnEvent(conn socketio.Conn) {
 	})
 	if err != nil {
 		conn.Emit("Error", err)
+		fmt.Printf("Error: %v\n", err)
 		return
 	}
 
