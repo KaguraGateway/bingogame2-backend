@@ -52,6 +52,11 @@ func (ru *RoomUser) Name() string {
 	return ru.name
 }
 
+// TODO: 事案なのでリファクタリングしたい
+func (ru *RoomUser) BingoCard(bingoNumbers []uint) *BingoCard {
+	return RebuildBingoCard(ru.bingoSeed, bingoNumbers)
+}
+
 func (ru *RoomUser) BingoSeed() int64 {
 	return ru.bingoSeed
 }

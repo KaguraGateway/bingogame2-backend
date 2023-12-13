@@ -113,3 +113,7 @@ func (bc *BingoCard) UpdateBingoCard(bingoNumbers []uint) {
 		}
 	}
 }
+
+func (bc *BingoCard) Card() [5][5]BingoRow {
+	return bc.card
+}
