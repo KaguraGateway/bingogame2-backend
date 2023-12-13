@@ -48,12 +48,13 @@ func main() {
 	// Start server
 	// SocketIO
 	socketIoServer := socketio.NewServer(nil)
-	socketio_server.RegisterRoutes(socketIoServer, i)
-	go socketIoServer.Serve()
-	defer socketIoServer.Close()
 
 	// Build Injector
 	i := buildInjector(db, socketIoServer)
+
+	socketio_server.RegisterRoutes(socketIoServer, i)
+	go socketIoServer.Serve()
+	defer socketIoServer.Close()
 
 	// HTTP Server
 	httpServer := echo.New()
